@@ -1,8 +1,13 @@
 import ArticleList from "@/app/components/ArticleList";
-import { getAllArticles } from "@/blogAPI";
+// import { getAllArticles } from "@/blogAPI";
 
 export default async function Home() {
-  const articles = await getAllArticles();
+  // const articles = await getAllArticles();
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  const res = await fetch(`${API_URL}/api/posts`, { cache: "no-store" });
+  const articles = await res.json();
 
   return (
     <div className="md:flex">
