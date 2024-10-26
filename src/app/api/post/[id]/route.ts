@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }>}
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+
   const { data, error } = await supabase
     .from("posts")
     .select("*")
@@ -22,4 +23,24 @@ export async function GET(
   }
 
   return NextResponse.json(data, { status: 200 });
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const { error: deleteError } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", id);
+
+  if (deleteError) {
+    return NextResponse.json({ error: deleteError.message }, { status: 500 });
+  }
+
+  return NextResponse.json(
+    { message: "削除に成功しました。" },
+    { status: 200 }
+  );
 }
